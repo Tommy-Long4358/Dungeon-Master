@@ -9,10 +9,4 @@ public abstract class Enemy extends Entity
 	{
 		super(n, mHP);
 	}
-
-    
-    
-	
-
-	
 }
