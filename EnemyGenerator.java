@@ -1,18 +1,23 @@
-
-/* EnemyGenerator.java - Creates random enemies to encounter in the maze. */
+/* Creates random enemies hidden in the monster rooms. */
 public class EnemyGenerator
 {
-	
-	/** Uses RNG to determine what type of enemy is being encountered in the monsterRoom method in Main.java and the decoration it has on the monster only if the current level of the map is above 1.
-	 *  @return Generated enemy
+	/** Randomizes an Enemy to generate.
+     *  @param level Current map level.
+	 *  @return Enemy object.
 	 */
 	public Enemy generateEnemy(int level)
 	{
+        // Initialize Enemy object
         Enemy enemy;
         int enemyDecoratorStack = 1;
+
+        // Randomized enemy selector
 		int enemySelection = (int)(Math.random() * 4) + 1;
+
+        // Randomized decorator selector
         int decorator = (int)(Math.random() * 2) + 1;
 
+        // Select random enemy
         if (enemySelection == 1)
         {
             enemy = new Orc();
@@ -30,27 +35,23 @@ public class EnemyGenerator
             enemy = new Goblin();
         }
 
+        // Apply EnemyDecorator classes if map level is above 1 for increased difficulty.
         if (level > 1)
         {
-            if (decorator == 1)
+            // Applies decorator classes repeatedly to Enemy.
+            while (enemyDecoratorStack <= level)
             {
-                while (enemyDecoratorStack < level)
+                if (decorator == 1)
                 {
                     enemy = new Warlock(enemy);
-                    
-                    enemyDecoratorStack += 1;
                 }
-            }
-            else
-            {
-                while (enemyDecoratorStack < level)
+                else
                 {
                     enemy = new Warrior(enemy);
-                    
-                    enemyDecoratorStack += 1;
                 }
-            }
 
+                enemyDecoratorStack += 1;
+            }
         }
 
         return enemy;
