@@ -1,12 +1,12 @@
-/** Represents a magical enemy and its attacks. 
+/** Represents a special type of Enemy Entity.
  *  Extends Enemy to gain access to the name and HP stats and methods. 
  *  Implements Magical to use magical attacks.
  * */
 public class MagicalEnemy extends Enemy implements Magical
 {
 	/** Initializes a magical enemy's name and max HP.
-	 *  @param n    Magical enemy's name
-	 *  @param mHp  Magical enemy's max HP
+	 *  @param n    Magical enemy's name.
+	 *  @param mHp  Magical enemy's max HP.
 	 */
 	public MagicalEnemy(String n, int mHp)
 	{
@@ -14,8 +14,8 @@ public class MagicalEnemy extends Enemy implements Magical
 	}
 	
 	/** Attack method for magical enemy that randomly chooses which spell to cast on the Enemy.
-	 *  @param e  Entity being attacked
-	 *  @return Randomly chosen magic attack
+	 *  @param e  Entity being attacked.
+	 *  @return Randomly chosen magic attack.
 	 */
 	@Override
 	public String attack(Entity e)
@@ -37,7 +37,7 @@ public class MagicalEnemy extends Enemy implements Magical
 	}
 	
 	/** Magic Missile attack method with a random damage range.
-	 *  @param e  Entity being attacked
+	 *  @param e  Entity being attacked.
 	 *  @return String value of the dmg being done on the Entity.
 	 */
 	@Override
@@ -50,7 +50,7 @@ public class MagicalEnemy extends Enemy implements Magical
 	}
 	
 	/** Fireball attack method with a random damage range.
-	 *  @param e  Entity being attacked
+	 *  @param e  Entity being attacked.
 	 *  @return String value of the dmg being done on the Entity.
 	 */
 	@Override
@@ -63,7 +63,7 @@ public class MagicalEnemy extends Enemy implements Magical
 	}
 
 	/** Thunderclap attack method with a random damage range.
-	 *  @param e  Entity being attacked
+	 *  @param e  Entity being attacked.
 	 *  @return String value of the dmg being done on the Entity.
 	 */
 	@Override
