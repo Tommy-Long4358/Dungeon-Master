@@ -1,12 +1,11 @@
-
 /** Entity.java - Describes a character in the game. */
 public abstract class Entity
 {
 	/* Represents characters name. */
-	private String name;
+	private final String name;
 	
 	/* Represents the character's max HP. */
-	private int maxHp;
+	private final int maxHp;
 	
 	/* Represents the character's current hp. */
 	private int hp;
@@ -46,15 +45,14 @@ public abstract class Entity
 		return maxHp;
 	}
 	
-	/** Adds HP to the entity's current HP to heal.
+	/** Adds HP to the entity's current HP.
      *  @param h  - Amount of hit points to heal by
      */
 	public void heal(int h) 
 	{
 		if ((hp + h) > maxHp)
 		{
-			int remainHp = maxHp - hp;
-			hp += remainHp;
+			hp = maxHp;
 		}
 		else
 		{
@@ -62,7 +60,7 @@ public abstract class Entity
 		}
 	}
 	
-	/** Subtracts HP from the entity's current HP to simulate taking damage.
+	/** Subtracts HP from the entity's current HP
      *  @param d - Amount of HP to decrease the entity's current HP by.
      */
 	public void takeDamage(int d)
@@ -70,7 +68,7 @@ public abstract class Entity
 		// if condition for if the HP goes below 0 HP.
 		if ((hp - d) < 0)
 		{
-			hp -= hp;
+			hp = 0;
 		}
 		else
 		{
