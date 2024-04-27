@@ -3,20 +3,20 @@ import java.awt.Point;
 /* Hero.java - Describes a character that represents the user. */
 public class Hero extends Entity implements Magical
 {
-	/* Represents the hero's current location */
+	/* The user's current location */
 	private Point loc;
 	
-	/* Represents the hero's map level */
+	/* The map level the user is currently on */
 	private int level;
 	
-	/* Represents the hero's current gold amount */
+	/* The user's current gold amount */
 	private int gold;
 	
-	/* Represents the hero's current number of keys the hero owns */
+	/* The user's current number of keys */
 	private int key;
 	
-	/** Constructor - Initializes hero with a name, 25 HP, 1 level, 0 gold, 0 keys, and loads the current map the Hero is in and its current location.
-	 *  @param n  Name of hero
+	/** Constructor - Initializes hero with a name, starting inventory, and starting location.
+	 *  @param n  Name of user
 	 */
 	public Hero(String n)
 	{
@@ -24,13 +24,14 @@ public class Hero extends Entity implements Magical
 		level = 1;
         gold = 0;
 		key = 0;
-        
+
+		// Load map
         Map.getInstance().loadMap(level);
+
         loc = Map.getInstance().findStart();
-        
 	}
 	
-	/** Increments hero's level and loads next map. */
+	/** Increments user's level and loads next map. */
 	public void levelUp()
 	{
 		level += 1;
@@ -47,47 +48,50 @@ public class Hero extends Entity implements Magical
 		}
 	}
 
-	/** Gets the current level of the Hero. 
-	 *	@return current level of the Hero.
+	/** Gets the current level of the user.
+	 *	@return current level of the user.
 	 */
 	public int getLevel()
 	{
 		return level;
 	}
 
-	/** Gets the current location of the Hero. 
-	 *	@return current location of the Hero.
+	/** Gets the current location of the user.
+	 *	@return current location of the user.
 	 */
 	public Point getLoc()
 	{
 		return loc;
 	}
 	
-	/** Allows user to move north in the map.
-	 *  @return The hero's new location or "x" if out of bounds.
+	/** Moves the user to the upper side of the map.
+	 *  @return The user's new location or "x" if out of bounds.
 	 */
 	public char goNorth()
 	{
-		// Get the X and Y coordinate from the point class getter methods that was imported.
+		// Get location of user
 		int x = (int) loc.getX();
 		int y = (int) loc.getY();
 		
-		// New point that represents going North.
+		// New point that represents going north.
 		Point p = new Point(x - 1, y);
 		
-		// If the new point coordinates are in the range of the map, the hero's new location is set to "p".
-		if ( ((p.getX() > -1) && (p.getX() < 5)) && ((p.getY() > -1) && (p.getY() < 5)) )
+		// Check if new point is out of bounds of the map
+		if (p.getX() >= 0)
 		{
+			// Set user's location to new location
 			loc = p;
-            
+
+			// Get char at new location
             return Map.getInstance().getCharAtLoc(loc); 
 		}
-		
+
+		// New point is out of bounds; return 'x'
 		return 'x';
 	}
 	
-	/** Allows user to move south in the map.
-	 *  @return The hero's new location or "x" if out of bounds
+	/** Moves the user to the bottom side of the map.
+	 *  @return The user's new location or "x" if out of bounds.
 	 */
 	public char goSouth()
 	{
@@ -96,10 +100,9 @@ public class Hero extends Entity implements Magical
 		
 		Point p = new Point(x + 1, y);
 		
-		if ( ((p.getX() > -1) && (p.getX() < 5)) && ((p.getY() > -1) && (p.getY() < 5)) )
+		if (p.getX() <= 5)
 		{
 			loc = p;
-			
             return  Map.getInstance().getCharAtLoc(loc);
 		}
 	
@@ -107,8 +110,8 @@ public class Hero extends Entity implements Magical
 	}
 	
 	
-	/** Allows user to move east in the map.
-	 *  @return The hero's new location or "x" if out of bounds
+	/** Moves the user to the right side of the map.
+	 *  @return The hero's new location or "x" if out of bounds.
 	 */
 	public char goEast()
 	{
@@ -117,19 +120,18 @@ public class Hero extends Entity implements Magical
 		
 		Point p = new Point(x, y + 1);
 		
-		if ( ((p.getX() > -1) && (p.getX() < 5)) && ((p.getY() > -1) && (p.getY() < 5)) )
+		if (p.getY() <= 5)
 		{
 			loc = p;
-			
-            return  Map.getInstance().getCharAtLoc(loc);
+            return Map.getInstance().getCharAtLoc(loc);
         }
 	
 		return 'x';
 	}
 	
 	
-	/** Allows user to move west in the map.
-	 *  @return The hero's new location or "x" if out of bounds
+	/** Moves the user to the left side of the map.
+	 *  @return The hero's new location or "x" if out of bounds.
 	 */
 	public char goWest()
 	{
@@ -138,61 +140,61 @@ public class Hero extends Entity implements Magical
 		
 		Point p = new Point(x, y - 1);
 		
-		if ( ((p.getX() > -1) && (p.getX() < 5)) && ((p.getY() > -1) && (p.getY() < 5)) )
+		if (p.getY() >= 0)
 		{
 			loc = p;
-			
             return Map.getInstance().getCharAtLoc(loc);
 		}
 		
 		return 'x';
 	}
 	
-	/** Gets the hero's current amount of gold.
-	 *  @return hero's current amount of gold
+	/** Gets the user's current amount of gold.
+	 *  @return user's current amount of gold.
 	 */
 	public int getGold()
 	{
 		return gold;
 	}
 	
-	/** Increments the amount of gold the hero has by its parameter after the hero has slain an enemy.
-	 *  @param  the amount of gold the hero got from slaying an enemy 
+	/** Increments user's gold amount.
+	 *  @param g amount of gold the user obtained.
 	 */
 	public void collectGold(int g)
 	{
 		gold += g;
 	}
 	
-	/** Decreases the amount of gold the hero has by its parameter after the hero has bought something from the Store method in Main.java.
-	 *  @param g  the amount of gold the hero has spent in the store.
+	/** Decreases the user's gold amount
+	 *  @param g  the amount of gold the user spent.
 	 */
 	public void spendGold(int g)
 	{
-		gold -= g;
-	
+		if (gold - g < 0)
+		{
+			gold = 0;
+		}
+		else
+		{
+			gold -= g;
+		}
 	}
 	
-	/** Boolean method that determines whether the hero has a key or not.
-	 *  @return  false if the hero has no keys and true if the hero has at least 1 key.
+	/** Checks whether the user has a key.
+	 *  @return  false if the user has no keys and true if the user has at least 1 key.
 	 */
 	public boolean hasKey()
 	{
-		if (key <= 0)
-		{
-			return false;
-		}
-		
-		return true;
+		return key > 0;
 	}
 	
-	/** Increments the number of keys the hero owns to open doors that go to the next map and level. */
+	/** Increments the amount of keys the user has. */
 	public void pickUpKey()
 	{
 		key += 1;
 	}
 	
-	/** Boolean method that uses a key from the hero's collection of keys.
+	/** Boolean method that uses a key from the user's key amount.
 	 *  @return true if a key has been used or false if it hasn't been used.
 	 */
 	public boolean useKey()
@@ -208,9 +210,9 @@ public class Hero extends Entity implements Magical
 		}
 	}
 	
-	/** Allows the hero to use an attack with a random damage output. This is for a normal attack.
-	 * @param e  Entity being attacked
-	 * @return String representation of physical damage
+	/** Allows the user to use an attack with a random damage output. This is a normal attack.
+	 * @param e  Entity object being attacked.
+	 * @return String representation of physical damage.
 	 */
 	@Override
 	public String attack(Entity e)
@@ -221,9 +223,9 @@ public class Hero extends Entity implements Magical
 		return super.getName() + " hits " + e.getName() + " for " + physicalDmg + " damage.";
 	}
 
-	/**  Magic missile attack method with random damage range. This is a magical attack.
-	 *   @param e Entity being hit by Magic missile
-	 *   @return  String representation of magical damage
+	/**  Allows the user to use an attack with a random damage output. This is a magical attack.
+	 *   @param e Entity being hit by Magic missile.
+	 *   @return  String representation of magical damage.
 	 */
 	@Override
 	public String magicMissle(Entity e)
@@ -235,9 +237,9 @@ public class Hero extends Entity implements Magical
 	}
 	
 	
-    /** Fireball attack method with random damage range. This is a magical attack.
-	 *  @param e  Entity being hit by Fireball
-	 *  @return  String representation of magical damage
+    /** Allows the user to use an attack with a random damage output. This is a magical attack.
+	 *  @param e  Entity being hit by Fireball.
+	 *  @return  String representation of magical damage.
 	 */
 	@Override
 	public String fireball(Entity e)
@@ -249,9 +251,9 @@ public class Hero extends Entity implements Magical
 	}
 	
 	
-	/** Thunder Clap attack method with random damage range. This is a magical attack.
-	 *  @param e Entity being hit by Thunderclap
-	 *  @return  String representation of magical damage
+	/** Allows the user to use an attack with a random damage output. This is a magical attack.
+	 *  @param e Entity being hit by Thunderclap.
+	 *  @return  String representation of magical damage.
 	 */  
 	@Override
 	public String thunderclap(Entity e)
@@ -262,8 +264,8 @@ public class Hero extends Entity implements Magical
 		return super.getName() + " zaps " + e.getName() + " for " + dmg + " damage.";
 	}
 
-	/** toString method that displays the hero's name, hp, level, gold, and map.
-	 *  @return Displays hero's name, hp, level, gold, and map 
+	/** toString method that displays the user's name, hp, level, gold, and map.
+	 *  @return String that contains the user's name, hp, level, gold, and map
 	 */
 	@Override
 	public String toString()
