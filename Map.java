@@ -6,7 +6,7 @@ import java.util.Scanner;
 /** Map class that represents the map the hero goes through. */
 public class Map
 {
-	/* Represents types of rooms in maze */
+	/* 2D Grid with each space representing a room. */
 	private char [][] map;
 	
 	/* Represents truth value of whether maze room has been visited */
@@ -16,7 +16,7 @@ public class Map
 	
 	/** Private Map Constructor
 	 *  Initializes a 5x5 2D array set of characters that represents the different rooms that is displayed in the Map.txt files.
-	 *  Initalizes a 5x5 set of booleans that determines if these rooms have been visited or not.
+	 *  Initializes a 5x5 set of booleans that determines if these rooms have been visited or not.
 	 */
 	private Map()
 	{
@@ -37,7 +37,7 @@ public class Map
 		return instance;
 	}
 	
-	/** Reads a map from the .txt files and writes its content to the map char 2D array.
+	/** Reads a map from the .txt files and writes its content to the 2D map array.
 	 *  @param mapNum   Level of the map
 	 *  @throws   FileNotFoundException if map file does not exist
 	 */
@@ -46,42 +46,30 @@ public class Map
 		try
 		{
 			Scanner read = new Scanner(new File("Map" + mapNum));
-			
-			String character = "";
+			int index = 0;
+
+			// Read each line of the text file
 			while (read.hasNext())
 			{
-				
 				String line = read.nextLine();
 				
-				// separates each line in a string array
+				// Separates each line in a string array
 				String [] chars = line.split(" ");
-				
-				// Adds each index of chars string array to character.
+
 				for (int i = 0; i < map[0].length; i++)
 				{
-					character = character + chars[i];	
-				}
-			}
-			
-			read.close();
-			
-			int charPosition = 0;
-			for (int x = 0; x < map.length; x++)
-			{
-				for (int y = 0; y < map[0].length; y++)
-				{
-					// converts index at character into char.
-					char letter = character.charAt(charPosition);
-					
-					// Assigns char to certain coordinate in map 2D array.
-					map[x][y] = letter; 
+					// Assign char to map
+					map[index][i] = chars[i].charAt(0);
 
-					// Fills the 2D boolean array with false.
-                    revealed[x][y] = false;
-					
-					charPosition++;
+					// Mark room as false; not revealed
+					revealed[index][i] = false;
 				}
+
+				index += 1;
 			}
+
+			// Close file
+			read.close();
 		}
 		catch (FileNotFoundException e)
 		{
@@ -99,27 +87,28 @@ public class Map
 	    int y = (int) p.getY();
 	    
 	    return map[x][y];
-	   
 	}
 	
-	/** Point method that finds the start of map.
-	 *  @return location of map start
+	/** Point method that finds the starting location in a map.
+	 *  @return location of starting position
 	 */
 	public Point findStart()
 	{
 		Point p = new Point();
-		
+
+		// Search through map for start location denoted by 's' in map array
 		for (int x = 0; x < map.length; x++)
 		{
 			for (int y = 0; y < map[0].length; y++)
 			{
-				// If X and Y location is equal to 's', return the location and reveal it as true.
+
 				if (map[x][y] == 's')
 				{
-					int a = x;
-					int b = y;
-				
-					p = new Point(a, b);
+					// Declare X and Y points for starting position
+					p.x = x;
+					p.y = y;
+
+					// Reveal room on map
                     revealed[x][y] = true;	
 				}
 			}		
@@ -128,19 +117,19 @@ public class Map
 		return p;
 	}
 	
-	/** Reveals the character of the location the Hero wants to go to.
-	 *  @param P A Point location on the map to be revealed.
+	/** Reveals the character of the location the user is heading towards.
+	 *  @param P A Point location on the map the user is heading towards.
 	 */
 	public void reveal(Point P)
 	{
-		int x = P.getX();
-		int y = P.getY();
+		int x = (int) P.getX();
+		int y = (int) P.getY();
 		
 		revealed[x][y] = true;
 	}
 	
-	/** Removes the character at a location after it has been visited.
-	 *  @param P Location of user/hero on map
+	/** Changes the character at a location to be an empty room after it has been visited.
+	 *  @param P Location of user on map
 	 */
 	public void removeCharAtLoc(Point P)
 	{
@@ -148,20 +137,10 @@ public class Map
 		{
 			for (int y = 0; y < map[0].length; y++)
 			{
-				// Once the hero steps out of the start, the char at the start is converted to 's' to represent the starting location.
-				if (map[x][y] == 's')
+				// Only change the room to empty if the hero is currently on it and it isn't the starting or finish position
+				if ((x == P.getX() && y == P.getY()) && (map[x][y] != 's' || map[x][y] != 'f'))
 				{
-					map[x][y] = 's';
-				}
-				// "f" is left on the map if the hero has no keys and can't progress to the next map.
-                else if (map[x][y] == 'f')
-                {
-                    map[x][y] = 'f';
-                }
-				// For every visited location the hero goes to, its listed as 'n' to show it has been visited.
-				else if ((x == P.getX()) && (y == P.getY()))
-				{
-					map[x][y] = 'n';	
+					map[x][y] = 'n';
 				}
 			}
 		}
@@ -186,15 +165,15 @@ public class Map
 				 }
 				 
 				 // Use "x" to represent all the unrevealed rooms 
-				 else if (revealed[x][y] == false)
+				 else if (!revealed[x][y])
 				 {
 					 mapString += "x ";
 				 }
 				 
 				 // If the char at that location is true, it shows the char at that location ("n")
-				 else if (revealed[x][y] == true)
+				 else if (revealed[x][y])
 				 {
-					 mapString = mapString + map[x][y] + " ";
+					 mapString += (map[x][y] + " ");
 				 } 
 			 }
 			 
