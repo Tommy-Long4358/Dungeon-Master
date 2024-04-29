@@ -40,7 +40,6 @@ public class Hero extends Entity implements Magical
 		{
 			level = level % 3;
             Map.getInstance().loadMap(level);
-			
 		}
 		else
 		{
@@ -103,7 +102,7 @@ public class Hero extends Entity implements Magical
 		if (p.getX() <= 5)
 		{
 			loc = p;
-            return  Map.getInstance().getCharAtLoc(loc);
+            return Map.getInstance().getCharAtLoc(loc);
 		}
 	
 		return 'x';

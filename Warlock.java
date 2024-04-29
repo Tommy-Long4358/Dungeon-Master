@@ -51,7 +51,7 @@ public class Warlock extends EnemyDecorator implements Magical
 		int dmg = (int)(Math.random() * 2);
 		e.takeDamage(dmg);
 
-		return "shoots " + e.getName() + " for " + dmg  + " damage.";
+		return "Shoots " + e.getName() + " for " + dmg  + " damage.";
 	}
 	
     /** Fireball attack method with random damage range.
@@ -64,7 +64,7 @@ public class Warlock extends EnemyDecorator implements Magical
 		int dmg = (int)(Math.random() * 3);
 		e.takeDamage(dmg);
 		
-		return "throws a fireball at " + e.getName() + " for " + dmg  + " damage.";
+		return "Throws a fireball at " + e.getName() + " for " + dmg  + " damage.";
 	}
 
 	/** Thunderclap attack method with random damage range.
@@ -77,6 +77,6 @@ public class Warlock extends EnemyDecorator implements Magical
 		int dmg = (int)(Math.random() * 3) + 1;
 		e.takeDamage(dmg);
 		
-        return "zaps " + e.getName() + " for " + dmg  + " damage.";
+        return "Zaps " + e.getName() + " for " + dmg  + " damage.";
 	}
 }
