@@ -5,11 +5,9 @@ public class Main
 {
 	public static void main(String[] args)
 	{
-		Scanner input = new Scanner(System.in);
-		
 		System.out.print("What is your name? ");
 		
-		String name = input.nextLine();
+		String name = CheckInput.getString();
 		
 		Hero h1 = new Hero(name);
 		Map map = Map.getInstance();
@@ -27,53 +25,29 @@ public class Main
 			System.out.println("3. Go East (right)");
 			System.out.println("4. Go West (left)");
 			System.out.println("5. Quit");
-			
-			// Test for valid input.
-			while (true)
-			{
-				if (input.hasNextInt())
-				{
-					direction = input.nextInt();
-					
-					if (direction > 0 && direction < 6)
-					{
-						break;
-					}
-				}
-				else
-				{
-					input.nextLine();
-				}
-			}
+
+			direction = CheckInput.getIntRange(1, 5);
 			
 			if (direction == 1)
 			{
-                
 				direct = h1.goNorth();
-				
-				
 			}
 			else if (direction == 2)
 			{
 				direct = h1.goSouth();
-
 			}
 			else if (direction == 3)
 			{
-				
 				direct = h1.goEast();
-				
 			}
 			else if(direction == 4)
 			{
 				direct = h1.goWest();
-			
 			}
 			else if (direction == 5)
 			{
 				System.out.println("Game over");
 				break;
-				
 			}
             
 			// Reveal the current location on what character it is.
@@ -87,7 +61,7 @@ public class Main
 			{
 				int itemDrop = (int)(Math.random() * 10) + 1;
 				
-				if (itemDrop == 46)
+				if (itemDrop == 5)
 				{
 					System.out.println("You found a key!");
 					h1.pickUpKey();
@@ -111,12 +85,11 @@ public class Main
 			}
 			else if (direct == 'n')
 			{
-				
 				System.out.println("There was nothing here.");
 			}
 			else if(direct == 'f')
 			{
-				if (h1.hasKey() == true)
+				if (h1.hasKey())
 				{
 					System.out.println("You found the exit! Proceeding to the next level.");
                     
@@ -141,58 +114,37 @@ public class Main
 	/** Repeats until monster is dead or hero runs away 
 	 * Gives the option of fighting or running away
 	 * @param h User/Hero
-	 * @param e Monster enemy
+	 * @param el Monster enemy
 	 * @return True if hero is still alive or false if the hero died.
 	 */
 	public static boolean monsterRoom(Hero h, Enemy el)
 	{
-		Scanner input = new Scanner(System.in);
 		Map map = Map.getInstance();
 	
 		System.out.println("You've encountered a " + el.getName());
 		
 		boolean alive = true;
-		
 		while (alive)
 		{
 			System.out.println(el);
-			
 			System.out.println("1. Fight\n2. Run Away");
 			
-			int decision;
-
-			while (true)
-			{
-				if (input.hasNextInt())
-				{
-					decision = input.nextInt();
-					
-					if (decision > 0 && decision < 3)
-					{
-						break;
-					}
-				}
-				else
-				{
-					input.nextLine();
-				}
-			}
+			int choice = CheckInput.getIntRange(1, 2);
 			
-			if (decision == 1)
+			if (choice == 1)
 			{
 				// call fight method if the decision to fight
 				// return true if alive, false if dead
 				alive = fight(h, el);
 				
 				// if statement for if the hero lives the encounter 
-				if (el.getHP() == 0)
+				if (el.getHP() == 0 && alive)
 				{
 					map.removeCharAtLoc(h.getLoc());
 					break;
-				
 				}	
 			}
-			else 
+			else if (choice == 2)
 			{
 				System.out.println("You ran away to a random location!");
 				
@@ -203,40 +155,30 @@ public class Main
 				{
 					if (direction == 1)
 					{
-						
 						path = h.goNorth();
-						
 					}
 					else if (direction == 2)
 					{
-						
 						path = h.goSouth();
-						
 					}
 					else if (direction == 3)
 					{
-						
 						path = h.goEast();
-						
 					}
 					else if (direction == 4)
 					{
-						
 						path = h.goWest();
-						
 					}
 
 					// if the hero goes out of bounds, it randomizes another direction to go to.
 					if (path == 'x')
 					{
 						direction = (int)(Math.random() * 4) + 1;
-                        
 					}
 					else
 					{
 						break;
 					}
-
 				}
 				
 				// if a valid direction is found, if statements to see what is there
@@ -248,10 +190,8 @@ public class Main
 				}
 				else if (path == 'i')
 				{
-					
                     int itemDrop = (int)(Math.random() * 10) + 1;
-				
-                    if (itemDrop == 46)
+                    if (itemDrop == 5)
                     {
                         System.out.println("You found a key!");
                         h.pickUpKey();
@@ -266,24 +206,21 @@ public class Main
                     map.reveal(h.getLoc());
                     break;
 				}
-				
 				else if (path == 'n')
 				{
-					
 					System.out.println("There was nothing here");
 					break;
 				}
 				else if(path == 'f')
 				{
-					if (h.hasKey() == true)
+					if (h.hasKey())
                     {
                         System.out.println("You found the exit! Proceeding to the next level.");
-                        
+
+						h.useKey();
                         h.levelUp();
                         map.loadMap(h.getLevel());
-                        
                         map.reveal(h.getLoc());
-
                     }
                     else
                     {
@@ -296,9 +233,7 @@ public class Main
                     Store(h);
 					break;
 				}
-					
 			}
-		
 		}
 		
 		return alive;
@@ -311,28 +246,9 @@ public class Main
 	 */
 	public static boolean fight(Hero h, Enemy e)
 	{
-		Scanner input = new Scanner(System.in);
 		System.out.println("1. Physical Attack \n2. Magical Attack");
 		
-		int attack;
-
-		while (true)
-		{
-			if (input.hasNextInt())
-			{
-				attack = input.nextInt();
-				
-				if (attack > 0 && attack < 3)
-				{
-					break;
-				}
-			}
-			else
-			{
-				input.nextLine();
-			}
-		}
-		
+		int attack = CheckInput.getIntRange(1, 2);
 		
 		if (attack == 1)
 		{
@@ -343,40 +259,23 @@ public class Main
 		{
 			System.out.println(h.MAGIC_MENU);
 			
-			while (true)
-			{
-				if (input.hasNextInt())
-				{
-					attack = input.nextInt();
-					
-					if (attack > 0 && attack < 4)
-					{
-						break;
-					}
-				}
-				else
-				{
-					input.nextLine();
-				}
-			}
+			attack = CheckInput.getIntRange(1, 3);
 			
 			// Spells depending on input.
 			if (attack == 1)
 			{
 				System.out.println(h.magicMissle(e));
 			}
-			else if(attack == 2)
+			else if (attack == 2)
 			{
 				System.out.println(h.fireball(e));
-				
 			}
-			else
+			else if (attack == 3)
 			{
 				System.out.println(h.thunderclap(e));
 			}
 		}
-		
-		// If enemy hp is zero, you win and it returns true.
+
 		if (e.getHP() == 0)
 		{
 			System.out.println("You defeated " + e.getName() + "!");
@@ -386,6 +285,7 @@ public class Main
 
 			h.collectGold(goldDrop);
 
+			// Return true if the hero lives
 			return true;
 		}
 		
@@ -400,7 +300,6 @@ public class Main
 		
 		// return true if no one has died yet and that the fight is still ongoing
 		return true;
-		
 	}
 	
 	/** Store method that the hero can access to buy items with their gold.
@@ -408,54 +307,18 @@ public class Main
 	 */
 	public static void Store(Hero h)
 	{
-		Scanner input = new Scanner(System.in);
 		System.out.println("Welcome to the store! What would you like to do?");
 		System.out.println("1. Buy\n2. Exit");
-		
-		
-		int selection;
 
-		
-		while (true)
-		{
-			if (input.hasNextInt())
-			{
-				selection = input.nextInt();
-				
-				if (selection > 0 && selection < 3)
-				{
-					break;
-				}
-			}
-			else
-			{
-				input.nextLine();
-			}
-		}
+		int selection = CheckInput.getIntRange(1, 2);
 		
 		while (selection == 1)
 		{
 			System.out.println("What would you like to buy?");
 			System.out.println("1. Health Potions: 25 Gold\n2. Key: 50 Gold");
 			System.out.println("Amount: " + h.getGold());
-			
-			
-			while (true)
-			{
-				if (input.hasNextInt())
-				{
-					selection = input.nextInt();
-					
-					if (selection > 0 && selection < 3)
-					{
-						break;
-					}
-				}
-				else
-				{
-					input.nextLine();
-				}
-			}
+
+			selection = CheckInput.getIntRange(1, 2);
 
 			// Selection for potions.
 			if (selection == 1)
@@ -474,13 +337,9 @@ public class Main
 					System.out.println("Not enough gold! Come back when you have gold.");
 					break;
 				}
-				
 			}
-
-			// Selection for exit keys.
 			else if (selection == 2)
 			{
-				
 				if (h.getGold() >= 50)
 				{
 					h.spendGold(50);
@@ -492,35 +351,13 @@ public class Main
 					System.out.println("Not enough gold! Come back when you have gold.");
 					break;
 				}
-				
 			}
 
-			
 			System.out.println("Amount: " + h.getGold());
 			System.out.println("1. Buy again\n2. Quit");
-			
-			while (true)
-			{
-				if (input.hasNextInt())
-				{
-					selection = input.nextInt();
-					
-					if (selection > 0 && selection < 3)
-					{
-						break;
-					}
-				}
-				else
-				{
-					input.nextLine();
-				}
-			}
-			
-			
+
+			selection = CheckInput.getIntRange(1, 2);
 		}
 		
 	}
-
-	
-
 }
